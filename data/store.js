@@ -1,4 +1,3 @@
-// Simulated product data
 export let products = [
   {
     id: 1,
@@ -6,6 +5,7 @@ export let products = [
     description: "A high-performance laptop",
     price: 1200,
     quantity: 10,
+    createdAt: new Date().toISOString(),
   },
   {
     id: 2,
@@ -13,16 +13,15 @@ export let products = [
     description: "Latest model smartphone",
     price: 800,
     quantity: 25,
+    createdAt: new Date().toISOString(),
   },
 ];
 
-// Simulated order data
 export let orders = [
   {
     id: 1,
-    productId: 1,
-    quantity: 2,
-    total: 2400,
-    date: new Date().toISOString(),
+    products: [1],
+    totalPrice: 2400,
+    createdAt: new Date().toISOString(),
   },
 ];

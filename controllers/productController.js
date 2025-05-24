@@ -30,6 +30,7 @@ export const createProduct = (request, response) => {
     description: description || "",
     price,
     quantity,
+    createdAt: new Date().toISOString(),
   };
 
   products.push(newProduct);

@@ -9,31 +9,36 @@ export const getOrders = (request, response) => {
 };
 
 export const createOrder = (request, response) => {
-  const { productId, quantity } = request.body;
+  const { productIds } = request.body;
 
-  if (!productId || quantity == null || quantity <= 0) {
-    return response.status(400).json({ message: "Invalid order data" });
+  if (!Array.isArray(productIds) || productIds.length === 0) {
+    return response
+      .status(400)
+      .json({ message: "Order must contain product ID" });
   }
 
-  const product = products.find((p) => p.id === parseInt(productId));
-  if (!product) {
-    return response.status(404).json({ message: "Product not found" });
-  }
+  let totalPrice = 0;
+  const includedProducts = [];
 
-  if (product.quantity > quantity) {
-    return response.status(400).json({ message: "Not available" });
-  }
+  for (const id of productIds) {
+    const product = products.find((p) => p.id === id);
+    if (!product) {
+      return response
+        .status(404)
+        .json({ message: `Product with ID ${id} not found` });
+    }
 
-  product.quantity -= quantity;
+    totalPrice += product.price;
+    includedProducts.push(product.id);
+  }
 
   const newOrder = {
     id: getNextOrderId(),
-    productId: product.id,
-    quantity,
-    total: product.price * quantity,
-    date: new Date().toISOString(),
+    products: includedProducts,
+    totalPrice,
+    createdAt: new Date().toISOString(),
   };
 
   orders.push(newOrder);
-  response.status(201).json(newOrder);
+  return response.status(201).json(newOrder);
 };
